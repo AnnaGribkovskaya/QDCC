@@ -6,7 +6,6 @@ bool myComparison(const std::pair<int,double> &a,const std::pair<int,double> &b)
        return a.second<b.second;
 }
 
-
 qdotspbasis::qdotspbasis(int NumberOfShellsStochastic, int NumberOfShellsExact, int ParticlesNumber, double HOStrenth)
 {
     this->homega = HOStrenth;
@@ -14,6 +13,7 @@ qdotspbasis::qdotspbasis(int NumberOfShellsStochastic, int NumberOfShellsExact, 
     this->m_ShellsExact = NumberOfShellsExact;
     this->m_ShellsStochastic = NumberOfShellsStochastic;
     setUpStatesPolarSorted();
+    this->m_StatesStochastic = m_shells.size();
 }
 
 void qdotspbasis::setUpStatesPolarSorted() {
@@ -100,7 +100,6 @@ double**** qdotspbasis::create4dArray(int dim1, int dim2, int dim3, int dim4) {
 double qdotspbasis::TBME(int p, int q, int r, int s){
     return (m_twoBodyElements[p][q][r][s] - m_twoBodyElements[p][q][s][r]);
 }
-
 
 void qdotspbasis::fillTwoBodyElements(){
     int NumberOfStates = m_shells.size();
@@ -200,7 +199,6 @@ bool qdotspbasis::isEqual(qstate* state1, qstate* state2){
         return false;
     }
 }
-
 
 void qdotspbasis::getQuantumDotStates(){
     for(qstate quantum_state : m_shells){

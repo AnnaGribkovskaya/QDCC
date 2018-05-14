@@ -8,9 +8,16 @@ void qdotchannelset::setUpChannels(generalSPclass * qsystem){
     qsys = qsystem;
     int Mlmax = 2*(qsys->getShellsStochastic() - 1);
     int Smax = 2;
+
+
+    std::cout << "  TEST  "  << std::endl;
+    std::cout << qsys->getStatesStochastic() << std::endl;
+
+
     for(int Ml = -Mlmax; Ml <= Mlmax; Ml++){
           for(int S = -Smax; S <= Smax; S = S + 2){
             ChannelVariety.emplace_back(channel());
+
             for(int i = 0; i < qsys->getFermiLevel(); i++){
               for(int j = 0; j < qsys->getFermiLevel(); j++){
                 qstate *QuantumState = qsys->sumState(i,j);
@@ -20,6 +27,7 @@ void qdotchannelset::setUpChannels(generalSPclass * qsystem){
                 } delete QuantumState;
               }
             }
+
             for(int a = qsys->getFermiLevel(); a < qsys->getStatesStochastic(); a++){
               for(int b = qsys->getFermiLevel(); b < qsys->getStatesStochastic(); b++){
                 qstate *QuantumState = qsys->sumState(a,b);
@@ -48,6 +56,7 @@ void qdotchannelset::setUpChannels(generalSPclass * qsystem){
               }
             }
             for(int l = 0; l < qsys->getFermiLevel(); l++){
+
               for(int d = qsys->getFermiLevel(); d < qsys->getStatesStochastic(); d++){
                 qstate *QuantumState = qsys->sumState(l,d);
                 if(Ml == QuantumState->m() && S == QuantumState->s() && l != d){
@@ -65,31 +74,6 @@ void qdotchannelset::setUpChannels(generalSPclass * qsystem){
                 } delete QuantumState;
               }
             }
-            /*
-            for(int a = qsys->getFermiLevel(); a < qsys->getStatesStochastic(); a++){
-              for(int b = qsys->getFermiLevel(); b < qsys->getStatesStochastic(); b++){
-                qstate*  QuantumStateAB = qsys->sumState(a,b);
-                if(Ml == QuantumStateAB->m() && S == QuantumStateAB->s() && a != b){
-                  for(int i = 0; i < qsys->getFermiLevel(); i++){
-                     qstate *QuantumState = qsys->sumSubstractState(a,b,i);
-                     for(int j = 0; j < qsys->getFermiLevel(); j++){
-                        qstate*  QuantumState1 = qsys->oneState(j);
-                        if(   QuantumState->nx() == QuantumState1->nx()
-                           && QuantumState->ny() == QuantumState1->ny()
-                           && QuantumState->nz() == QuantumState1->nz()
-                           && QuantumState->s()  == QuantumState1->s()) {
-                            ChannelVariety.back().m_ParticlePlusParticleMinusHoleVec.emplace_back(channelindexpair());
-                            ChannelVariety.back().m_ParticlePlusParticleMinusHoleVec.back().setThree(a, b, i);
-                            ChannelVariety.back().m_HoleVec.emplace_back(channelindexpair());
-                            ChannelVariety.back().m_HoleVec.back().setOne(j);
-                         } delete QuantumState1;
-                     } delete QuantumState;
-                  }
-                } delete QuantumStateAB;
-              }
-            }
-          }
-        }*/
       }
     }
 }

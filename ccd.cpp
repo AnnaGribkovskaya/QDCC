@@ -4,7 +4,27 @@ ccd::ccd(generalSPclass * qsystem, channelset * allchannels){
     qsys = qsystem;
     channels = allchannels;
 
+   /*
+    for(int i = 0; i < qsys->getStatesStochastic(); i++) {
+        for(int j = 0; j < qsys->getStatesStochastic(); j++) {
+            for(int k = 0; k < qsys->getStatesStochastic(); k++) {
+                for(int l = 0; l < qsys->getStatesStochastic(); l++) {
+                    double val = qsys->TBME(i,j,k,l);
+                    std::cout << i <<" " <<j <<" "<< k << " "<< l << " ml_i =  " << quantum_state_alpha.m() << " ml_j =  " << quantum_state_beta.m() << " ml_k =  " << quantum_state_gamma.m() << " ml_l =  " << quantum_state_delta.m() <<std::endl;
+                    std::cout << i <<" " <<j <<" "<< k << " "<< l << " sm_i =  " << quantum_state_alpha.s() << " sm_j =  " << quantum_state_beta.s() << " sm_k =  " << quantum_state_gamma.s() << " sm_l =  " << quantum_state_delta.s() <<std::endl;
 
+ if (val != 0){
+ qstate quantum_state_alpha = qsys->getStateVec().at(i);
+ qstate quantum_state_beta = qsys->getStateVec().at(j);
+ qstate quantum_state_gamma = qsys->getStateVec().at(k);
+ qstate quantum_state_delta = qsys->getStateVec().at(l);
+ std::cout << i <<" " <<j <<" "<< k << " "<< l << " ml_i =  " << quantum_state_alpha.m() << " ml_j =  " << quantum_state_beta.m() << " ml_k =  " << quantum_state_gamma.m() << " ml_l =  " << quantum_state_delta.m() <<std::endl;
+ std::cout << i <<" " <<j <<" "<< k << " "<< l << " sm_i =  " << quantum_state_alpha.s() << " sm_j =  " << quantum_state_beta.s() << " sm_k =  " << quantum_state_gamma.s() << " sm_l =  " << quantum_state_delta.s() <<std::endl;
+ std::cout << std::setprecision(16) <<i <<" " <<j <<" "<< k << " "<< l << " " << val << std::endl;}
+
+
+                }}}}
+*/
 }
 
 void ccd::setUpInterractionMatrixBlocks(){

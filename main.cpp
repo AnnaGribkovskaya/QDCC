@@ -42,7 +42,7 @@ int main(int numberOfArguments, char **argumentList)
 
         
     ccd QD(SPbasis, AllChannels);
-    std::cout << std::setprecision(16) << "Couple Cluster energy " << QD.iterateCCD(2.707106781186547) << std::endl;
+    std::cout << std::setprecision(16) << "Couple Cluster energy " << QD.iterateCCD(-0.01171875) << std::endl;
 
 
 
