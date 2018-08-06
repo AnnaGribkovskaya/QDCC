@@ -5,17 +5,13 @@ qdotchannelset::qdotchannelset(){
 }
 
 void qdotchannelset::setUpChannels(generalSPclass * qsystem){
+    int i = 0;
     qsys = qsystem;
-    int Mlmax = 2*(qsys->getShellsStochastic() - 1);
+    int Mlmax = 2*(qsys->getShellsStochastic()-1);
     int Smax = 2;
-
-
-    std::cout << "  TEST  "  << std::endl;
-    std::cout << qsys->getStatesStochastic() << std::endl;
-
-
     for(int Ml = -Mlmax; Ml <= Mlmax; Ml++){
           for(int S = -Smax; S <= Smax; S = S + 2){
+            i++;
             ChannelVariety.emplace_back(channel());
 
             for(int i = 0; i < qsys->getFermiLevel(); i++){
@@ -27,7 +23,6 @@ void qdotchannelset::setUpChannels(generalSPclass * qsystem){
                 } delete QuantumState;
               }
             }
-
             for(int a = qsys->getFermiLevel(); a < qsys->getStatesStochastic(); a++){
               for(int b = qsys->getFermiLevel(); b < qsys->getStatesStochastic(); b++){
                 qstate *QuantumState = qsys->sumState(a,b);
@@ -76,11 +71,18 @@ void qdotchannelset::setUpChannels(generalSPclass * qsystem){
             }
       }
     }
+
+/*
+    std::cout<< "N states formula " << (qsys->getShellsStochastic()+1)*qsys->getShellsStochastic() << std::endl;
+    std::cout<< "N states programm  " << qsys->getStatesStochastic() << std::endl;
+    std::cout<< "N channels formula " << 3*(4*(qsys->getShellsStochastic()-1)+1) << std::endl;
+    std::cout<< "N channels counter " << i << std::endl;*/
 }
 
 void qdotchannelset::setUpChannelsQ3(generalSPclass * qsystem){
     qsys = qsystem;
     int Mlmax = 0; // AAAAAA dopisat' suda E na obolochke fermi
+    std::cout << "Mlmax  " <<Mlmax << std::endl;
     int Smax = 1;
     for(int Ml = -Mlmax; Ml <= Mlmax; Ml++){
        for(int S = -Smax; S <= Smax; S++){
@@ -110,7 +112,7 @@ void qdotchannelset::setUpChannelsQ3(generalSPclass * qsystem){
 
 void qdotchannelset::setUpChannelsQ4(generalSPclass * qsystem){
     qsys = qsystem;
-    int Mlmax = qsys->getShellsStochastic() - 1;; // AAAAAA dopisat' suda E na obolochke fermi
+    int Mlmax = qsys->getShellsStochastic()-1;; // AAAAAA dopisat' suda E na obolochke fermi
     int Smax = 1;
     for(int Ml = -Mlmax; Ml <= Mlmax; Ml++){
        for(int S = -Smax; S <= Smax; S++){

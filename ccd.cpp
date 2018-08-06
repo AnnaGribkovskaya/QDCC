@@ -4,27 +4,6 @@ ccd::ccd(generalSPclass * qsystem, channelset * allchannels){
     qsys = qsystem;
     channels = allchannels;
 
-   /*
-    for(int i = 0; i < qsys->getStatesStochastic(); i++) {
-        for(int j = 0; j < qsys->getStatesStochastic(); j++) {
-            for(int k = 0; k < qsys->getStatesStochastic(); k++) {
-                for(int l = 0; l < qsys->getStatesStochastic(); l++) {
-                    double val = qsys->TBME(i,j,k,l);
-                    std::cout << i <<" " <<j <<" "<< k << " "<< l << " ml_i =  " << quantum_state_alpha.m() << " ml_j =  " << quantum_state_beta.m() << " ml_k =  " << quantum_state_gamma.m() << " ml_l =  " << quantum_state_delta.m() <<std::endl;
-                    std::cout << i <<" " <<j <<" "<< k << " "<< l << " sm_i =  " << quantum_state_alpha.s() << " sm_j =  " << quantum_state_beta.s() << " sm_k =  " << quantum_state_gamma.s() << " sm_l =  " << quantum_state_delta.s() <<std::endl;
-
- if (val != 0){
- qstate quantum_state_alpha = qsys->getStateVec().at(i);
- qstate quantum_state_beta = qsys->getStateVec().at(j);
- qstate quantum_state_gamma = qsys->getStateVec().at(k);
- qstate quantum_state_delta = qsys->getStateVec().at(l);
- std::cout << i <<" " <<j <<" "<< k << " "<< l << " ml_i =  " << quantum_state_alpha.m() << " ml_j =  " << quantum_state_beta.m() << " ml_k =  " << quantum_state_gamma.m() << " ml_l =  " << quantum_state_delta.m() <<std::endl;
- std::cout << i <<" " <<j <<" "<< k << " "<< l << " sm_i =  " << quantum_state_alpha.s() << " sm_j =  " << quantum_state_beta.s() << " sm_k =  " << quantum_state_gamma.s() << " sm_l =  " << quantum_state_delta.s() <<std::endl;
- std::cout << std::setprecision(16) <<i <<" " <<j <<" "<< k << " "<< l << " " << val << std::endl;}
-
-
-                }}}}
-*/
 }
 
 void ccd::setUpInterractionMatrixBlocks(){
@@ -112,9 +91,7 @@ void ccd::setUpInterractionMatrixBlocksQ4(){
 }
 
 void ccd::setUpInitialAmplitudes(){
-    //arma::vec Epsilon;
-    //Epsilon.zeros(qsys->getStateVec().size());
-     //Epsilon = qsys->getSPenergies();
+
     for(channel onechannel : ChannelVariety){
         m_pphhTBlock.emplace_back(symblock(onechannel.m_ParticleParticleVec.size(),onechannel.m_HoleHoleVec.size()));
         m_pphhTBlock.back().setZeros();
@@ -168,9 +145,7 @@ void ccd::setUpInitialAmplitudesQ3(){
 }
 
 void ccd::setUpInitialAmplitudesQ4(){
-    //arma::vec Epsilon;
-    //Epsilon.zeros(qsys->getStateVec().size());
-    //Epsilon = qsys->getSPenergies();
+
     for(channel onechannel : ChannelVariety2){
         m_hhMpTBlock.emplace_back(symblock(1, onechannel.m_HolePlusHoleMinusParticleVec.size()));
         m_hhMpTBlock.back().setZeros();
@@ -201,10 +176,6 @@ void ccd::calculateAmplitudes(){
     Q4();
     Q4Permutations();
 
-    //arma::vec Epsilon;
-    //Epsilon.zeros(qsys->getStateVec().size());
-    //Epsilon = qsys->getSPenergies();
-
     for(unsigned int ch = 0; ch < ChannelVariety.size(); ch++){
         channel onechannel = ChannelVariety.at(ch);
         if (onechannel.m_ParticleParticleVec.size()*onechannel.m_HoleHoleVec.size() != 0){
@@ -214,6 +185,10 @@ void ccd::calculateAmplitudes(){
                     channelindexpair IJ = onechannel.m_HoleHoleVec.at(ij);
                     double value = 0.0;
                     value = m_pphhVBlock.at(ch).getElement(ab, ij);
+                    //std::cout << "value " << value << std::endl;
+                    //std::cout << "Already existing value : " << m_pphhTBlock.at(ch).getElement(ab,ij) << std::endl;
+                    //std::cout << "Energy denom  : " <<qsys->getSPenergies().at(IJ.first()) + qsys->getSPenergies().at(IJ.second()) - qsys->getSPenergies().at(AB.first()) - qsys->getSPenergies().at(AB.second()) << std::endl;
+
                     m_pphhTBlock.at(ch).setElement(ab, ij, (value + m_pphhTBlock.at(ch).getElement(ab,ij))/((qsys->getSPenergies().at(IJ.first()) + qsys->getSPenergies().at(IJ.second()) - qsys->getSPenergies().at(AB.first()) - qsys->getSPenergies().at(AB.second()))) );
                 }
             }
@@ -228,11 +203,12 @@ void ccd::updateAmplitudes(){
         if (onechannel.m_ParticleParticleVec.size()*onechannel.m_HoleHoleVec.size() != 0){
             for(unsigned int ab = 0; ab < onechannel.m_ParticleParticleVec.size(); ab++){
                 for(unsigned int ij = 0; ij < onechannel.m_HoleHoleVec.size(); ij++){
-                    m_pphhTBlockPrev.at(chan).setElement(ab,ij, m_pphhTBlock.at(chan).getElement(ab,ij));
+                    m_pphhTBlockPrev.at(chan).setElement(ab,ij, m_pphhTBlock.at(chan).getElement(ab,ij));                    
                 }
             }
         }
     }
+
     // Updating ampitudes for L3 and Q2 --- m_pMhhMpTBlock update
     for(unsigned int chan1 = 0; chan1 < ChannelVariety.size(); chan1++){
         channel onechannel1 = ChannelVariety.at(chan1);
@@ -248,6 +224,7 @@ void ccd::updateAmplitudes(){
             }
         }
     }
+
     // updating ampitudes for Q3
     for(unsigned int chanQ3 = 0; chanQ3 < ChannelVariety1.size(); chanQ3++){
         channel onechannelQ3 = ChannelVariety1.at(chanQ3);
@@ -262,6 +239,7 @@ void ccd::updateAmplitudes(){
         }
     }
     // Updating ampitudes for Q4
+
     for(unsigned int chanQ4 = 0; chanQ4 < ChannelVariety2.size(); chanQ4++){
         channel onechannelQ4 = ChannelVariety2.at(chanQ4);
         symblock amplitudesQ4 = m_hhMpTBlock.at(chanQ4);
@@ -274,6 +252,64 @@ void ccd::updateAmplitudes(){
                 m_hhMpTBlockPrev.at(chanQ4).setElement(0, (int)klc, valueQ4);
         }
     }
+/*
+    //zero m_pphhTblock
+    for(unsigned int chan = 0; chan < ChannelVariety.size(); chan++){
+        channel onechannel = ChannelVariety.at(chan);
+        if (onechannel.m_ParticleParticleVec.size()*onechannel.m_HoleHoleVec.size() != 0){
+            for(unsigned int ab = 0; ab < onechannel.m_ParticleParticleVec.size(); ab++){
+                for(unsigned int ij = 0; ij < onechannel.m_HoleHoleVec.size(); ij++){
+                    m_pphhTBlock.at(chan).setElement(ab,ij, 0);
+                }
+            }
+        }
+    }
+
+    // zero --- m_pMhhMpTBlock update
+    for(unsigned int chan1 = 0; chan1 < ChannelVariety.size(); chan1++){
+        channel onechannel1 = ChannelVariety.at(chan1);
+        symblock amplitudes = m_pMhhMpTBlock.at(chan1);
+        for(unsigned int ai = 0; ai < onechannel1.m_ParticleMinusHoleVec.size(); ai++){
+            for(unsigned int jb = 0; jb < onechannel1.m_HoleMinusParticleVec.size(); jb++){
+                int a = amplitudes.getRowMap(ai).first();
+                int i = amplitudes.getRowMap(ai).second();
+                int j1 = amplitudes.getColMap(jb).first();
+                int b1 = amplitudes.getColMap(jb).second();
+                //double value = updateAmplitudesL3(a,b1,i,j1);
+                m_pMhhMpTBlock.at(chan1).setElement((int)ai, (int)jb, 0);
+            }
+        }
+    }
+
+    // zero ampitudes for Q3
+    for(unsigned int chanQ3 = 0; chanQ3 < ChannelVariety1.size(); chanQ3++){
+        channel onechannelQ3 = ChannelVariety1.at(chanQ3);
+        symblock amplitudesQ3 = m_ppMhTBlock.at(chanQ3);
+        for(unsigned int abj = 0; abj < onechannelQ3.m_ParticlePlusParticleMinusHoleVec.size(); abj++){
+                int a1 = amplitudesQ3.getRowMap3x1(abj).first();
+                int b = amplitudesQ3.getRowMap3x1(abj).second();
+                int j = amplitudesQ3.getRowMap3x1(abj).third();
+                int i1 = amplitudesQ3.getColMap1x3(abj).first();
+                //double valueQ3 = updateAmplitudesQ3(a1,b,i1,j);
+                m_ppMhTBlock.at(chanQ3).setElement((int)abj , 0, 0);
+        }
+    }
+    // zero ampitudes for Q4
+
+    for(unsigned int chanQ4 = 0; chanQ4 < ChannelVariety2.size(); chanQ4++){
+        channel onechannelQ4 = ChannelVariety2.at(chanQ4);
+        symblock amplitudesQ4 = m_hhMpTBlock.at(chanQ4);
+        for(unsigned int klc = 0; klc < onechannelQ4.m_HolePlusHoleMinusParticleVec.size(); klc++){
+                int k2 = amplitudesQ4.getColMap3x1(klc).first();
+                int l = amplitudesQ4.getColMap3x1(klc).second();
+                int c2 = amplitudesQ4.getColMap3x1(klc).third();
+                int a2 = amplitudesQ4.getRowMap1x3(klc).first();
+                //double valueQ4 = updateAmplitudesQ4(a2,c2,k2,l);
+                m_hhMpTBlock.at(chanQ4).setElement(0, (int)klc, 0);
+        }
+    }
+
+*/
 }
 
 double ccd::updateAmplitudesQ4(int p, int q, int r, int s){
@@ -322,19 +358,41 @@ double ccd::updateAmplitudesL3(int p, int q, int r, int s){
 }
 
 double ccd::iterateCCD(double MBPT2Energy){
+    std::cout << "Initialize CHannels  " <<std::endl;
     initializeVandTandChannels();
+    std::cout << "Print Amplitudes at step ZERO:  " <<std::endl;
+    //printAmplitudes();
+    /*std::cout << "HERE START TEST:  " <<std::endl;
+    for(unsigned int chan = 0; chan < ChannelVariety.size(); chan++){
+        channel onechannel = ChannelVariety.at(chan);
+        if (onechannel.m_ParticleParticleVec.size()*onechannel.m_HoleHoleVec.size() != 0){
+            for(unsigned int ab = 0; ab < onechannel.m_ParticleParticleVec.size(); ab++){
+                for(unsigned int ij = 0; ij < onechannel.m_HoleHoleVec.size(); ij++){
+                    m_pphhTBlock.at(chan).setElement(ab,ij, m_pphhTBlockPrev.at(chan).getElement(ab,ij));
+                }
+            }
+        }
+    }
+    std::cout << "MBPT initial correction:  " <<std::setprecision(6) << computeCCDCorrEnergy()<< std::endl;
+    std::cout << "END TEST   " <<std::endl;
+    */
     double EnergyDiff = 100.0;
     double CorrelationEnergy;
     double CorrelationEnergyOld = MBPT2Energy;
-    while (EnergyDiff > m_toleranceCCD){
+    int i = 0;
+    while (EnergyDiff > m_toleranceCCD && i < 10){
+        i++;
         calculateAmplitudes();
         CorrelationEnergy = computeCCDCorrEnergy();
         std::cout << std::setprecision(16) << "Loop Cor Energy " << CorrelationEnergy << std::endl;
         EnergyDiff = CorrelationEnergy - CorrelationEnergyOld;
         EnergyDiff = std::abs(EnergyDiff);
         CorrelationEnergyOld = CorrelationEnergy;
+        //printAmplitudesPrev();
         updateAmplitudes();
+        //printAmplitudesPrev();
     }
+    //printAmplitudes();
     return CorrelationEnergy;
 }
 
@@ -373,9 +431,10 @@ void ccd::L1plusL2plusQ1(){
     for(unsigned int chan=0; chan < ChannelVariety.size(); chan++){
         channel onechannel = ChannelVariety.at(chan);
         if (onechannel.m_ParticleParticleVec.size()*onechannel.m_HoleHoleVec.size() != 0){
-            m_pphhTBlock.at(chan).setMatrix(0.5*m_ppppVBlock.at(chan).getMatrix()*m_pphhTBlockPrev.at(chan).getMatrix() +
-                                            0.5*m_pphhTBlockPrev.at(chan).getMatrix()*m_hhhhVBlock.at(chan).getMatrix() +
+            m_pphhTBlock.at(chan).setMatrix(0.5*m_ppppVBlock.at(chan).getMatrix()*m_pphhTBlockPrev.at(chan).getMatrix()+
+                                            0.5*m_pphhTBlockPrev.at(chan).getMatrix()*m_hhhhVBlock.at(chan).getMatrix()+
                                             0.25*m_pphhTBlockPrev.at(chan).getMatrix()*m_hhppVBlock.at(chan).getMatrix()*m_pphhTBlockPrev.at(chan).getMatrix());
+
         }
     }
 }
@@ -390,7 +449,7 @@ void ccd::L3(){
 }
 
 void ccd::Q2(){
-    for(unsigned int chan=0; chan < ChannelVariety.size(); chan++){
+    for(unsigned int chan = 0; chan < ChannelVariety.size(); chan++){
         channel onechannel = ChannelVariety.at(chan);
         if (onechannel.m_ParticleMinusHoleVec.size()*onechannel.m_HoleMinusParticleVec.size() != 0){
             m_pMhhMpTBlock.at(chan).setMatrix(m_pMhhMpTBlockPrev.at(chan).getMatrix()*m_hMppMhVBlock.at(chan).getMatrix()*m_pMhhMpTBlockPrev.at(chan).getMatrix());
@@ -399,7 +458,7 @@ void ccd::Q2(){
 }
 
 void ccd::Q3(){
-    for(unsigned int chan=0; chan < ChannelVariety1.size(); chan++){
+    for(unsigned int chan = 0; chan < ChannelVariety1.size(); chan++){
         channel onechannel = ChannelVariety1.at(chan);
         if (onechannel.m_ParticlePlusParticleMinusHoleVec.size()*onechannel.m_HoleVec.size() != 0){
             m_ppMhTBlock.at(chan).setMatrix(-0.5*m_ppMhTBlockPrev.at(chan).getMatrix()*m_ppMhVBlock.at(chan).getMatrix()*m_ppMhTBlockPrev.at(chan).getMatrix());
@@ -408,7 +467,7 @@ void ccd::Q3(){
 }
 
 void ccd::Q4(){
-    for(unsigned int chan=0; chan < ChannelVariety2.size(); chan++){
+    for(unsigned int chan = 0; chan < ChannelVariety2.size(); chan++){
         channel onechannel = ChannelVariety2.at(chan);
         if (onechannel.m_HolePlusHoleMinusParticleVec.size()*onechannel.m_ParticleVec.size() != 0){
             m_hhMpTBlock.at(chan).setMatrix(-0.5*m_hhMpTBlockPrev.at(chan).getMatrix()*m_hhMpVBlock.at(chan).getMatrix()*m_hhMpTBlockPrev.at(chan).getMatrix());
@@ -586,4 +645,9 @@ void ccd::Q2Permutations(){
         }
     }
 }
+
+
+
+
+
 

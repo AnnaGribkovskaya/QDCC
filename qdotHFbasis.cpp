@@ -1,12 +1,11 @@
-#include "qdotspbasis.h"
+#include "qdotHFbasis.h"
 
-
-bool myComparison(const std::pair<int,double> &a,const std::pair<int,double> &b)
+bool Comparison(const std::pair<int,double> &a,const std::pair<int,double> &b)
 {
        return a.second<b.second;
 }
 
-qdotspbasis::qdotspbasis(int NumberOfShellsStochastic, int NumberOfShellsExact, int ParticlesNumber, double HOStrenth)
+qdotHFbasis::qdotHFbasis(int NumberOfShellsStochastic, int NumberOfShellsExact, int ParticlesNumber, double HOStrenth)
 {
     this->homega = HOStrenth;
     this->m_FermiLevel = ParticlesNumber;
@@ -18,7 +17,7 @@ qdotspbasis::qdotspbasis(int NumberOfShellsStochastic, int NumberOfShellsExact, 
     getQuantumDotStates();
 }
 
-void qdotspbasis::setUpStatesPolarSorted() {
+void qdotHFbasis::setUpStatesPolarSorted() {
 
     qstate m_q_state;
     std::vector<int> oddShells;
@@ -58,7 +57,7 @@ void qdotspbasis::setUpStatesPolarSorted() {
         vector_to_sort.push_back(mapping);
     }
 
-    sort(vector_to_sort.begin(),vector_to_sort.end(),myComparison);
+    sort(vector_to_sort.begin(),vector_to_sort.end(),Comparison);
     std::vector<qstate> sorted_states;
     for(unsigned int i = 0; i < vector_to_sort.size(); i++) {
         sorted_states.push_back(m_shells.at(vector_to_sort.at(i).first));
@@ -73,7 +72,7 @@ void qdotspbasis::setUpStatesPolarSorted() {
 
 }
 
-double**** qdotspbasis::create4dArray(int dim1, int dim2, int dim3, int dim4) {
+double**** qdotHFbasis::create4dArray(int dim1, int dim2, int dim3, int dim4) {
 
     double**** h = new double***[dim1];
 
@@ -99,12 +98,14 @@ double**** qdotspbasis::create4dArray(int dim1, int dim2, int dim3, int dim4) {
     return h;
 }
 
-double qdotspbasis::TBME(int p, int q, int r, int s){
+// PEREPISAT!!!!!!! TBME!!!!
+
+double qdotHFbasis::TBME(int p, int q, int r, int s){
     return (m_twoBodyElements[p][q][r][s] - m_twoBodyElements[p][q][s][r]);
     //return m_twoBodyElements[p][q][r][s];
 }
 
-void qdotspbasis::fillTwoBodyElements(){
+void qdotHFbasis::fillTwoBodyElements(){
     int NumberOfStates = m_shells.size();
 
     for(int i = 0; i < NumberOfStates; i++) {
@@ -165,7 +166,7 @@ void qdotspbasis::fillTwoBodyElements(){
     std::cout << "Two body matrix elements are filled!" << std::endl;
 }
 
-void qdotspbasis::CalculateSPenergies(){
+void qdotHFbasis::CalculateSPenergies(){
     int NumberOfStates = m_shells.size();
     //m_HOEnergies.zeros(NumberOfStates, NumberOfStates);
     for(int i = 0; i < NumberOfStates; i++) {
@@ -174,11 +175,11 @@ void qdotspbasis::CalculateSPenergies(){
     }
 }
 
-std::vector<double> qdotspbasis::getSPenergies(){
+std::vector<double> qdotHFbasis::getSPenergies(){
     return m_HOEnergies;
 }
 
-qstate* qdotspbasis::oneState(int p){
+qstate* qdotHFbasis::oneState(int p){
     int N = getStateVec().at(p).n();
     int M = getStateVec().at(p).m();
     int S =  getStateVec().at(p).s();
@@ -187,7 +188,7 @@ qstate* qdotspbasis::oneState(int p){
     return QuantumState;
 }
 
-qstate* qdotspbasis::sumState(int p, int q){
+qstate* qdotHFbasis::sumState(int p, int q){
     int N = getStateVec().at(p).n() + getStateVec().at(q).n();
     int M = getStateVec().at(p).m() + getStateVec().at(q).m();
     int S = getStateVec().at(p).s() + getStateVec().at(q).s();
@@ -196,7 +197,7 @@ qstate* qdotspbasis::sumState(int p, int q){
     return QuantumState;
 }
 
-qstate* qdotspbasis::substractState(int p, int q){
+qstate* qdotHFbasis::substractState(int p, int q){
     int N = getStateVec().at(p).n() - getStateVec().at(q).n();
     int M = getStateVec().at(p).m() - getStateVec().at(q).m();
     int S = getStateVec().at(p).s() - getStateVec().at(q).s();
@@ -205,7 +206,7 @@ qstate* qdotspbasis::substractState(int p, int q){
     return QuantumState;
 }
 
-qstate* qdotspbasis::sumSubstractState(int p, int q, int r){
+qstate* qdotHFbasis::sumSubstractState(int p, int q, int r){
     int N = getStateVec().at(p).n() + getStateVec().at(q).n() - getStateVec().at(r).n();
     int M = getStateVec().at(p).m() + getStateVec().at(q).m() - getStateVec().at(r).m();
     int S = getStateVec().at(p).s() + getStateVec().at(q).s() - getStateVec().at(r).s();
@@ -214,7 +215,7 @@ qstate* qdotspbasis::sumSubstractState(int p, int q, int r){
     return QuantumState;
 }
 
-bool qdotspbasis::isEqual(qstate* state1, qstate* state2){
+bool qdotHFbasis::isEqual(qstate* state1, qstate* state2){
     if (   //state1->n() == state2->n() &&
            state1->m() == state2->m()
         && state1->s()  == state2->s()
@@ -225,7 +226,7 @@ bool qdotspbasis::isEqual(qstate* state1, qstate* state2){
     }
 }
 
-void qdotspbasis::getQuantumDotStates(){
+void qdotHFbasis::getQuantumDotStates(){
     int i = 0;
     for(qstate quantum_state : m_shells){
         std::cout << "state Number = " << i << std::endl;
@@ -238,17 +239,17 @@ void qdotspbasis::getQuantumDotStates(){
     printSPenergies();
 }
 
-void qdotspbasis::getQuantumDotStatesNumber(){
+void qdotHFbasis::getQuantumDotStatesNumber(){
     std::cout << "Number of available states of system is " << m_shells.size() << std::endl;
 }
 
-void qdotspbasis::printSPenergies(){
+void qdotHFbasis::printSPenergies(){
     for (unsigned int i = 0; i < m_HOEnergies.size(); i++){
         std::cout << m_HOEnergies.at(i) << std::endl;
     }
 }
 
-void qdotspbasis::test(){
+void qdotHFbasis::test(){
     int N = m_FermiLevel;
     double val = 0.0;
     for(int i = 0; i < N; i++) {
@@ -259,4 +260,183 @@ void qdotspbasis::test(){
      }
     std::cout << std::setprecision(16) << " initial energy: " << val << std::endl;
 
+}
+
+
+// HERE START THE HARTREE-FOCK PART
+
+void qdotHFbasis::setCoefficientMatrix(arma::mat CoefficientMatrix){
+     m_C = CoefficientMatrix;
+}
+
+arma::mat qdotHFbasis::computeDensityMatrix(){
+    int NumberOfStates = m_shells.size();
+    arma::mat DensityMatrix(NumberOfStates, NumberOfStates);
+
+    for(int k = 0; k < NumberOfStates; k++) {
+        for(int l = 0; l < m_FermiLevel; l++) {
+            double sum = 0.0;
+            for (int i=0; i < m_FermiLevel; i++) {
+                    sum += m_C(k,i)*m_C(l,i);
+                    DensityMatrix(k, l) = sum;
+            }
+        }
+    }
+    return DensityMatrix;
+}
+/* NOT NEEDED FUNCTION GETSPENERGIES DOES THE SAME!
+
+void qdotHFbasis::CalculateNonIntEnergy(){
+    int NumberOfStates = m_shells.size();
+    m_HOEnergies.zeros(NumberOfStates,NumberOfStates);
+    for(int i = 0; i < NumberOfStates; i++) {
+        QuantumState quantum_state = m_shells.at(i);
+        m_HOEnergies(i, i) = (2.0*(double)quantum_state.n() + (double)abs(quantum_state.m()) + 1.0)*homega;
+    }
+}*/
+
+void qdotHFbasis::computeHFmatrix(arma::mat DensityMatrix){
+    int NumberOfStates = m_shells.size();
+    m_HF.zeros(NumberOfStates,NumberOfStates);
+    double FockElement = 0;
+
+    for(int i = 0; i < NumberOfStates; i++) {
+        qstate quantum_state_alpha = m_shells.at(i);
+        int alpha_n = quantum_state_alpha.n();
+        int alpha_m = quantum_state_alpha.m();
+        int alpha_sm = quantum_state_alpha.s();
+
+        for(int j = 0; j < NumberOfStates; j++) {
+            qstate quantum_state_beta = m_shells.at(j);
+            int beta_n = quantum_state_beta.n();
+            int beta_m = quantum_state_beta.m();
+            int beta_sm = quantum_state_beta.s();
+
+            for(int k = 0; k < NumberOfStates; k++) {
+                qstate quantum_state_gama = m_shells.at(k);
+                int gama_n = quantum_state_gama.n();
+                int gama_m = quantum_state_gama.m();
+                int gama_sm = quantum_state_gama.s();
+
+                for(int l = 0; l < NumberOfStates; l++) {
+                    qstate quantum_state_delta = m_shells.at(l);
+                    int delta_n = quantum_state_delta.n();
+                    int delta_m = quantum_state_delta.m();
+                    int delta_sm = quantum_state_delta.s();
+                    double TBME = 0.0;
+                    double tbme1 = 0.0;
+                    double tbme2 = 0.0;
+
+                    if ((alpha_sm == beta_sm && gama_sm == delta_sm)){
+                        tbme1 = m_twoBodyElements[i][k][j][l];
+                    }
+                    if ((alpha_sm == delta_sm && gama_sm == beta_sm)){
+                        tbme2 = m_twoBodyElements[i][k][l][j];
+                    }
+                    TBME = tbme1 - tbme2;
+                    FockElement += DensityMatrix(k,l)*TBME;
+                }
+            }
+            if (i == j) {
+                m_HF(i, i) += m_HOEnergies.at(i);
+            }
+            m_HF(i, j) += FockElement;
+            FockElement = 0.0;
+        }
+    }
+}
+
+double qdotHFbasis::computeHartreeFockEnergyDifference(){
+    return ((arma::accu(abs(eigval - eigval_previous)))/(double)m_shells.size());
+}
+void qdotHFbasis::computeHartreeFockEnergy(arma::mat DensityMatrix){
+    int NumberOfStates = m_shells.size();
+    int FermiLevel = m_FermiLevel;
+    double selfConsistentFIeldIterations = 0.0;
+    double ExchangePart = 0.0;
+    double SingleParticleEnergies = 0.0;
+
+    for(int f = 0; f < FermiLevel; f++){
+        SingleParticleEnergies += eigval(f);
+    }
+
+    for(int i = 0; i < NumberOfStates; i++) {
+        qstate quantum_state_alpha = m_shells.at(i);
+        int alpha_n = quantum_state_alpha.n();
+        int alpha_m = quantum_state_alpha.m();
+        int alpha_sm = quantum_state_alpha.s();
+
+        for(int j = 0; j < NumberOfStates; j++) {
+            qstate quantum_state_beta = m_shells.at(j);
+            int beta_n = quantum_state_beta.n();
+            int beta_m = quantum_state_beta.m();
+            int beta_sm = quantum_state_beta.s();
+
+            for(int k = 0; k < NumberOfStates; k++) {
+                qstate quantum_state_gama = m_shells.at(k);
+                int gama_n = quantum_state_gama.n();
+                int gama_m = quantum_state_gama.m();
+                int gama_sm = quantum_state_gama.s();
+
+                for(int l = 0; l < NumberOfStates; l++) {
+                    qstate quantum_state_delta = m_shells.at(l);
+                    int delta_n = quantum_state_delta.n();
+                    int delta_m = quantum_state_delta.m();
+                    int delta_sm = quantum_state_delta.s();
+
+                    double TBME = 0.0;
+                    double tbme1 = 0.0;
+                    double tbme2 = 0.0;
+                    if ((alpha_sm == beta_sm) && (gama_sm == delta_sm)){
+                       tbme1 = m_twoBodyElements[i][k][j][l];
+                    }
+                    if ((alpha_sm == delta_sm) && (gama_sm == beta_sm)){
+                       tbme2 = m_twoBodyElements[i][k][l][j];
+                    }
+                    TBME = tbme1 - tbme2;
+                    selfConsistentFIeldIterations = DensityMatrix(i,j)*DensityMatrix(k,l)*TBME;
+                    ExchangePart += selfConsistentFIeldIterations;
+                }
+            }
+        }
+    }
+    double HF_Energy = SingleParticleEnergies - 0.5*ExchangePart;
+    // Uncoment for debug
+    //cout << "SPEnergies " << SingleParticleEnergies << endl;
+    //cout << "Exchange " << ExchangePart << endl;
+    std::cout << "===================================================================" << std::endl;
+    std::cout << std::setprecision(12);
+    std::cout << "Num of electrons = " << m_FermiLevel << std::endl;
+    //std::cout << "Num of shells = " << m_EnergyCutOff << std::endl;
+    std::cout << "Omega = " << homega << std::endl;
+    std::cout << "Total energy " << HF_Energy << std::endl;
+    //writeToFile(HF_Energy, NumberOfParticles, m_EnergyCutOff, homega);
+}
+
+void qdotHFbasis::applyHartreeFockMethod(){
+    int NumberOfStates = m_shells.size();
+    arma::mat C(NumberOfStates, NumberOfStates);
+
+    C.eye();
+    setCoefficientMatrix(C);
+    double difference = 10; //dummy value to handle first iteration
+    double epsilon = 10e-8;
+
+    eigval_previous.zeros(NumberOfStates);
+    int i = 0;
+    while (epsilon < difference && i < 1000){
+        arma::mat x_DensityMatrix = computeDensityMatrix();
+        computeHFmatrix(x_DensityMatrix);
+        arma::eig_sym(eigval, eigvec, m_HF);
+        setCoefficientMatrix(eigvec);
+        difference = computeHartreeFockEnergyDifference();
+        eigval_previous = eigval;
+        i++;
+
+    }
+
+    arma::mat y_DensityMatrix = computeDensityMatrix();
+
+    computeHartreeFockEnergy(y_DensityMatrix);
+    std::cout << "Number of iterations " << i << std::endl;
 }

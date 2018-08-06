@@ -1,5 +1,5 @@
-#ifndef QDOTSPBASIS_H
-#define QDOTSPBASIS_H
+#ifndef QDOTHFBASIS_H
+#define QDOTHFBASIS_H
 
 #include "generalspclass.h"
 #include <vector>
@@ -7,13 +7,12 @@
 #include <armadillo>
 #include "Coulomb_Functions.hpp"
 
+class qdotHFbasis: public generalSPclass
 
-class qdotspbasis: public generalSPclass
 {
 public:
     //constr
-    qdotspbasis(int NumberOfShellsStochastic, int NumberOfShellsExact, int ParticlesNumber, double HOStrenth);
-
+    qdotHFbasis(int NumberOfShellsStochastic, int NumberOfShellsExact, int ParticlesNumber, double HOStrenth);
     //vars
     int m_ShellsExact, m_ShellsStochastic, m_FermiLevel, m_StatesExact, m_StatesStochastic, m_nMax;
     double**** m_twoBodyElements;
@@ -43,14 +42,17 @@ public:
 
     void test();
 
-
-
-
-
 private:
     // vars
     double homega;
     std::vector<double> m_HOEnergies;
+
+    arma::vec eigval_previous;
+    arma::vec eigval;
+    arma::mat eigvec;
+    //arma::mat m_HOEnergies;
+    arma::mat m_C;
+    arma::mat m_HF;
 
     // methods
     void CalculateSPenergies();
@@ -59,13 +61,20 @@ private:
     void setUpStatesPolarSorted();
     void printSPenergies();
 
+    //For HF
+    void setCoefficientMatrix(arma::mat);
+    arma::mat computeDensityMatrix();
+    void CalculateNonIntEnergy();
+    void computeHFmatrix(arma::mat);
+    double computeHartreeFockEnergyDifference();
+    void applyHartreeFockMethod();
+    void computeHartreeFockEnergy(arma::mat);
+
+
+
 protected:
     std::vector<qstate> m_shells;
 
 };
-#endif // QDOTSPBASIS_H
 
-
-
-
-
+#endif // QDOTHFBASIS_H

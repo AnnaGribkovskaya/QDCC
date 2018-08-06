@@ -6,7 +6,7 @@
 #include "ccd.h"
 #include "qdotspbasis.h"
 #include "channelset.h"
-
+#include "qdotHFbasis.h"
 
 
 //using namespace std;
@@ -34,18 +34,18 @@ int main(int numberOfArguments, char **argumentList)
     generalSPclass * SPbasis;
     channelset * AllChannels;
 
-    SPbasis = new qdotspbasis(NumberOfShellsStochastic, NumberOfShellsExact, NumberOfElectrons, homega);
+    //SPbasis = new qdotspbasis(NumberOfShellsStochastic, NumberOfShellsExact, NumberOfElectrons, homega);
+    SPbasis = new qdotHFbasis(NumberOfShellsStochastic, NumberOfShellsExact, NumberOfElectrons, homega);
     AllChannels = new qdotchannelset();
+
+
     //SPbasis->getQuantumDotStatesNumber();
     //SPbasis->getQuantumDotStates();
     //std::cout << std::setprecision(16) << SPbasis->TBME(0,1,10,11) << std::endl;
 
         
     ccd QD(SPbasis, AllChannels);
-    std::cout << std::setprecision(16) << "Couple Cluster energy " << QD.iterateCCD(-0.01171875) << std::endl;
-
-
-
+    std::cout << std::setprecision(16) << "Couple Cluster energy " << QD.iterateCCD(-0.09817477042468105) << std::endl;
 
 
 
