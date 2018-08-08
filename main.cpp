@@ -20,6 +20,7 @@ int main(int numberOfArguments, char **argumentList)
     int NumberOfElectrons = 2;
     int MC = 200;
     double homega = 1.0;
+    double mixing = 1.0; // 1.0 for no mixing
 
     // If a first argument is provided, it is the number of shells _STOCHASTIC_
     if(numberOfArguments > 1) NumberOfShellsStochastic = atoi(argumentList[1]);
@@ -49,7 +50,7 @@ int main(int numberOfArguments, char **argumentList)
 
 
         
-    //ccd QD(SPbasis, AllChannels);
+    //ccd QD(SPbasis, AllChannels, mixing);
     //std::cout << std::setprecision(16) << "Couple Cluster energy " << QD.iterateCCD(-0.09817477042468105) << std::endl;
 
 

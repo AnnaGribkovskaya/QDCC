@@ -11,13 +11,15 @@
 class ccd
 {
 public:
-    ccd(generalSPclass *, channelset *);
+    ccd(generalSPclass *, channelset *, double);
     double iterateCCD(double);    
 
 private:
 
     //const
     const double m_toleranceCCD = 1e-6;
+    double m_mixing;
+
 
     //vars
     generalSPclass * qsys;

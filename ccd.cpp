@@ -1,8 +1,9 @@
 #include "ccd.h"
 
-ccd::ccd(generalSPclass * qsystem, channelset * allchannels){
+ccd::ccd(generalSPclass * qsystem, channelset * allchannels, double mixing){
     qsys = qsystem;
     channels = allchannels;
+    m_mixing = mixing;
 
 }
 
@@ -188,8 +189,10 @@ void ccd::calculateAmplitudes(){
                     //std::cout << "value " << value << std::endl;
                     //std::cout << "Already existing value : " << m_pphhTBlock.at(ch).getElement(ab,ij) << std::endl;
                     //std::cout << "Energy denom  : " <<qsys->getSPenergies().at(IJ.first()) + qsys->getSPenergies().at(IJ.second()) - qsys->getSPenergies().at(AB.first()) - qsys->getSPenergies().at(AB.second()) << std::endl;
-
-                    m_pphhTBlock.at(ch).setElement(ab, ij, (value + m_pphhTBlock.at(ch).getElement(ab,ij))/((qsys->getSPenergies().at(IJ.first()) + qsys->getSPenergies().at(IJ.second()) - qsys->getSPenergies().at(AB.first()) - qsys->getSPenergies().at(AB.second()))) );
+                    double value1 = (value + m_pphhTBlock.at(ch).getElement(ab,ij))/((qsys->getSPenergies().at(IJ.first()) + qsys->getSPenergies().at(IJ.second()) - qsys->getSPenergies().at(AB.first()) - qsys->getSPenergies().at(AB.second())));
+                    value1 = m_mixing*value1 + (1.0 - m_mixing)*m_pphhTBlockPrev.at(ch).getElement(ab,ij);
+                    m_pphhTBlock.at(ch).setElement(ab, ij, value1 );
+                    //m_pphhTBlock.at(ch).setElement(ab, ij, (value + m_pphhTBlock.at(ch).getElement(ab,ij))/((qsys->getSPenergies().at(IJ.first()) + qsys->getSPenergies().at(IJ.second()) - qsys->getSPenergies().at(AB.first()) - qsys->getSPenergies().at(AB.second()))) );
                 }
             }
         }
