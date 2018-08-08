@@ -31,11 +31,11 @@ public:
     virtual int getStatesStochastic () {return this->m_StatesStochastic;}
     virtual int getnMax             () {return this->m_nMax;}
 
-    virtual qstate* oneState(int);
-    virtual qstate* sumState(int, int);
-    virtual qstate* substractState(int, int);
-    virtual qstate* sumSubstractState(int, int, int);
-    virtual bool isEqual(qstate*, qstate*);
+    virtual qstate oneState(int);
+    virtual qstate sumState(int, int);
+    virtual qstate substractState(int, int);
+    virtual qstate sumSubstractState(int, int, int);
+    virtual bool isEqual(qstate, qstate);
     virtual void getQuantumDotStates();
     virtual void getQuantumDotStatesNumber();
 

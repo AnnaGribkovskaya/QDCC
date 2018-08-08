@@ -22,11 +22,11 @@ public:
     virtual int getStatesExact      () = 0;
     virtual int getStatesStochastic () = 0;
     virtual int getnMax () = 0;
-    virtual qstate* oneState(int) = 0;
-    virtual qstate* sumState(int, int) = 0;
-    virtual qstate* substractState(int, int) = 0;
-    virtual qstate* sumSubstractState(int, int, int) = 0;
-    virtual bool isEqual(qstate*, qstate*) = 0;
+    virtual qstate oneState(int) = 0;
+    virtual qstate sumState(int, int) = 0;
+    virtual qstate substractState(int, int) = 0;
+    virtual qstate sumSubstractState(int, int, int) = 0;
+    virtual bool isEqual(qstate, qstate) = 0;
 
 
 

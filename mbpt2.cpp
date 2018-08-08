@@ -17,20 +17,20 @@ void mbpt2::setUpChannels(){
 
         for(int i = 0; i < qsys->getFermiLevel(); i++){
           for(int j = 0; j < qsys->getFermiLevel(); j++){
-            qstate *QuantumState = qsys->sumState(i,j);
-            if(Ml == QuantumState->m() && S == QuantumState->s() && i != j){
+            qstate QuantumState = qsys->sumState(i,j);
+            if(Ml == QuantumState.m() && S == QuantumState.s() && i != j){
               ChannelVariety.back().m_HoleHoleVec.emplace_back(channelindexpair());
               ChannelVariety.back().m_HoleHoleVec.back().set(i, j);
-            } delete QuantumState;
+            } //delete QuantumState;
           }
         }
         for(int a = qsys->getFermiLevel(); a < qsys->getStatesStochastic(); a++){
           for(int b = qsys->getFermiLevel(); b < qsys->getStatesStochastic(); b++){
-            qstate *QuantumState = qsys->sumState(a,b);
-            if(Ml == QuantumState->m() && S == QuantumState->s() && a != b){
+            qstate QuantumState = qsys->sumState(a,b);
+            if(Ml == QuantumState.m() && S == QuantumState.s() && a != b){
               ChannelVariety.back().m_ParticleParticleVec.emplace_back(channelindexpair());
               ChannelVariety.back().m_ParticleParticleVec.back().set(a, b);
-            } delete QuantumState;
+            } //delete QuantumState;
           }
         }
       }
