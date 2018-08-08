@@ -7,7 +7,7 @@
 #include "qdotspbasis.h"
 #include "channelset.h"
 #include "qdotHFbasis.h"
-
+#include "mbpt2.h"
 
 //using namespace std;
 
@@ -43,9 +43,14 @@ int main(int numberOfArguments, char **argumentList)
     //SPbasis->getQuantumDotStates();
     //std::cout << std::setprecision(16) << SPbasis->TBME(0,1,10,11) << std::endl;
 
+    mbpt2 EGmbpt2(SPbasis);
+    double InitialCCDEnergy = EGmbpt2.calculateEnergyMatMult();
+    std::cout << std::setprecision(16) << "initial correlation energy(MBPT2) " << InitialCCDEnergy << std::endl;
+
+
         
-    ccd QD(SPbasis, AllChannels);
-    std::cout << std::setprecision(16) << "Couple Cluster energy " << QD.iterateCCD(-0.09817477042468105) << std::endl;
+    //ccd QD(SPbasis, AllChannels);
+    //std::cout << std::setprecision(16) << "Couple Cluster energy " << QD.iterateCCD(-0.09817477042468105) << std::endl;
 
 
 

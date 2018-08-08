@@ -15,7 +15,8 @@ SOURCES += main.cpp \
     channelset.cpp \
     channel.cpp \
     qdotchannelset.cpp \
-    qdotHFbasis.cpp
+    qdotHFbasis.cpp \
+    mbpt2.cpp
 
 HEADERS += \
     generalspclass.h \
@@ -28,5 +29,6 @@ HEADERS += \
     qdotspbasis.h \
     Coulomb_Functions.hpp \
     qdotchannelset.h \
-    qdotHFbasis.h
+    qdotHFbasis.h \
+    mbpt2.h
 
