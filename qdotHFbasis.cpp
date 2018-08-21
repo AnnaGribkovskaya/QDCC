@@ -208,46 +208,46 @@ double**** qdotHFbasis::delete4dArray(int dim1, int dim2, int dim3) {
 }
 
 
-qstate* qdotHFbasis::oneState(int p){
+qstate qdotHFbasis::oneState(int p){
     int N = getStateVec().at(p).n();
     int M = getStateVec().at(p).m();
     int S =  getStateVec().at(p).s();
-    qstate *QuantumState = new qstate();
-    QuantumState->set(N, M, S);
+    qstate QuantumState = qstate();
+    QuantumState.set(N, M, S);
     return QuantumState;
 }
 
-qstate* qdotHFbasis::sumState(int p, int q){
+qstate qdotHFbasis::sumState(int p, int q){
     int N = getStateVec().at(p).n() + getStateVec().at(q).n();
     int M = getStateVec().at(p).m() + getStateVec().at(q).m();
     int S = getStateVec().at(p).s() + getStateVec().at(q).s();
-    qstate *QuantumState = new qstate();
-    QuantumState->set(N, M, S);
+    qstate QuantumState = qstate();
+    QuantumState.set(N, M, S);
     return QuantumState;
 }
 
-qstate* qdotHFbasis::substractState(int p, int q){
+qstate qdotHFbasis::substractState(int p, int q){
     int N = getStateVec().at(p).n() - getStateVec().at(q).n();
     int M = getStateVec().at(p).m() - getStateVec().at(q).m();
     int S = getStateVec().at(p).s() - getStateVec().at(q).s();
-    qstate *QuantumState = new qstate();
-    QuantumState->set(N, M, S);
+    qstate QuantumState = qstate();
+    QuantumState.set(N, M, S);
     return QuantumState;
 }
 
-qstate* qdotHFbasis::sumSubstractState(int p, int q, int r){
+qstate qdotHFbasis::sumSubstractState(int p, int q, int r){
     int N = getStateVec().at(p).n() + getStateVec().at(q).n() - getStateVec().at(r).n();
     int M = getStateVec().at(p).m() + getStateVec().at(q).m() - getStateVec().at(r).m();
     int S = getStateVec().at(p).s() + getStateVec().at(q).s() - getStateVec().at(r).s();
-    qstate *QuantumState = new qstate();
-    QuantumState->set(N, M, S);
+    qstate QuantumState = qstate();
+    QuantumState.set(N, M, S);
     return QuantumState;
 }
 
-bool qdotHFbasis::isEqual(qstate* state1, qstate* state2){
+bool qdotHFbasis::isEqual(qstate state1, qstate state2){
     if (   //state1->n() == state2->n() &&
-           state1->m() == state2->m()
-        && state1->s()  == state2->s()
+           state1.m() == state2.m()
+        && state1.s()  == state2.s()
             ) {
         return true;
     } else {
