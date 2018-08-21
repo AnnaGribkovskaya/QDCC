@@ -16,6 +16,10 @@ public:
     //vars
     int m_ShellsExact, m_ShellsStochastic, m_FermiLevel, m_StatesExact, m_StatesStochastic, m_nMax;
     double**** m_twoBodyElements;
+    double**** m_twoBodyElementsInterm1;
+    double**** m_twoBodyElementsInterm2;
+    double**** m_twoBodyElementsInterm3;
+
 
     //methods
     double TBME(int, int, int, int);
@@ -31,11 +35,11 @@ public:
     virtual int getStatesStochastic () {return this->m_StatesStochastic;}
     virtual int getnMax             () {return this->m_nMax;}
 
-    virtual qstate oneState(int);
-    virtual qstate sumState(int, int);
-    virtual qstate substractState(int, int);
-    virtual qstate sumSubstractState(int, int, int);
-    virtual bool isEqual(qstate, qstate);
+    virtual qstate* oneState(int);
+    virtual qstate* sumState(int, int);
+    virtual qstate* substractState(int, int);
+    virtual qstate* sumSubstractState(int, int, int);
+    virtual bool isEqual(qstate*, qstate*);
     virtual void getQuantumDotStates();
     virtual void getQuantumDotStatesNumber();
 
@@ -69,6 +73,9 @@ private:
     double computeHartreeFockEnergyDifference();
     void applyHartreeFockMethod();
     void computeHartreeFockEnergy(arma::mat);
+    void convertTBMEtoHFbasis();
+    void convertOneBodyElementstoHFbasis();
+    double**** delete4dArray(int, int, int);
 
 
 
